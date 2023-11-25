@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class RubyController : MonoBehaviour
 {
@@ -30,6 +32,17 @@ public class RubyController : MonoBehaviour
     AudioSource audioSource;
     public AudioClip throwingClip;
     public AudioClip hitClip;
+
+    //New variables to track the score
+    public TextMeshProUGUI robotCount;
+    public int fixedRobots = 0;
+
+    //New variables to track win/loss
+    public GameObject gameOverUI;
+    public TextMeshProUGUI gameOverText;
+    public GameObject group11;
+    bool victory = false;
+    bool gameIsOver = false;
 
     // Start is called before the first frame update
     void Start()
@@ -83,6 +96,28 @@ public class RubyController : MonoBehaviour
                 }
             }
         }
+
+        //Ends game if health hits 0
+        if (currentHealth == 0)
+        {
+            GameOver();
+        }
+
+        //Ends game with victory if four robots are fixed
+        if (fixedRobots >= 4)
+        {
+            victory = true;
+            GameOver();
+        }
+        
+        //Restarts the game if the game is over and R is pressed
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (gameIsOver == true)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -132,6 +167,33 @@ public class RubyController : MonoBehaviour
     public void PlaySound(AudioClip clip)
     {
         audioSource.PlayOneShot(clip);
+    }
+
+    //This method updates the score UI text
+    public void IncrementRobotText()
+    {
+        fixedRobots++;
+        robotCount.SetText("{0}", fixedRobots);
+    }
+
+    //This method shows the win/loss message and allows player to restart the game
+    void GameOver()
+    {
+        //Sets message to You Win or You Lose
+        string message = "Lose";
+        
+        if (victory == true)
+        {
+            message = "Win";
+            group11.SetActive(true);
+        }
+
+        gameOverText.SetText("You "+message+"!");
+
+        //Halts player movement and displays message
+        speed = 0f;
+        gameOverUI.SetActive(true);
+        gameIsOver = true;
     }
 }
 
