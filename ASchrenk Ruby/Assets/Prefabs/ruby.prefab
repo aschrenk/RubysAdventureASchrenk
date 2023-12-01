@@ -111,6 +111,13 @@ MonoBehaviour:
   healEffect: {fileID: 5296012688209332249}
   throwingClip: {fileID: 8300000, guid: b2edfd40873655249ba0e01a5cf705be, type: 3}
   hitClip: {fileID: 8300000, guid: 9b1bb1f450b7d444fa4a8019d13519a7, type: 3}
+  winClip: {fileID: 8300000, guid: 4df030273e2c5264f8b0342e62883a7a, type: 3}
+  lossClip: {fileID: 8300000, guid: 0e819d975a990da41af306e9970d024d, type: 3}
+  robotCount: {fileID: 0}
+  fixedRobots: 0
+  gameOverUI: {fileID: 0}
+  gameOverText: {fileID: 0}
+  group11: {fileID: 0}
 --- !u!50 &4266248753898398478
 Rigidbody2D:
   serializedVersion: 4

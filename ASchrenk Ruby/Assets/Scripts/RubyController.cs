@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class RubyController : MonoBehaviour
 {
-    public float speed = 3.0f;
+    public float speed = 0f;
 
     public int maxHealth = 5;
     public float timeInvincible = 2.0f;
@@ -33,16 +33,32 @@ public class RubyController : MonoBehaviour
     public AudioClip throwingClip;
     public AudioClip hitClip;
 
-    //New variables to track the score
+    //Variables to track the score
     public TextMeshProUGUI robotCount;
     public int fixedRobots = 0;
 
-    //New variables to track win/loss
+    //Variables to track win/loss
     public GameObject gameOverUI;
     public TextMeshProUGUI gameOverText;
     public GameObject group11;
     bool victory = false;
     bool gameIsOver = false;
+
+    //New modding variables for:
+
+    //Win/loss audio cues -Astraea
+    public AudioClip winClip;
+    public AudioClip lossClip;
+
+    //Time attack mode -Astraea
+    float attackTimer = 30.0f;
+    string displayTime;
+    bool timeMode = false;
+    public GameObject modeUI;
+    public TextMeshProUGUI timerUI;
+
+    //Ken- please put your new variables here
+
 
     // Start is called before the first frame update
     void Start()
@@ -118,6 +134,26 @@ public class RubyController : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
+
+        //If in time attack mode, updates timer -Astraea
+        if (timeMode == true)
+        {
+            attackTimer -= Time.deltaTime;
+
+            displayTime = attackTimer.ToString("F0");
+            if (attackTimer <= 9.49999f)
+            {
+                displayTime = "0" + displayTime;
+            }
+
+            timerUI.SetText(":" + displayTime);
+
+            //If the timer reaches zero without all the robots fixed, end the game -Astraea
+            if (attackTimer <= 0f && fixedRobots < 4)
+            {
+                GameOver();
+            }
+        }
     }
 
     void FixedUpdate()
@@ -169,23 +205,33 @@ public class RubyController : MonoBehaviour
         audioSource.PlayOneShot(clip);
     }
 
-    //This method updates the score UI text
+    //Updates the score UI text
     public void IncrementRobotText()
     {
         fixedRobots++;
         robotCount.SetText("{0}", fixedRobots);
     }
 
-    //This method shows the win/loss message and allows player to restart the game
+    //Shows the win/loss message and allows player to restart the game
     void GameOver()
     {
         //Sets message to You Win or You Lose
         string message = "Lose";
-        
+
+        //Stops the timer -Astraea
+        timeMode = false;
+
         if (victory == true)
         {
             message = "Win";
             group11.SetActive(true);
+            //Plays win audio cue -Astraea
+            PlaySound(winClip);
+        }
+        else
+        {
+            //Plays loss audio cue -Astraea
+            PlaySound(lossClip);
         }
 
         gameOverText.SetText("You "+message+"!");
@@ -194,6 +240,22 @@ public class RubyController : MonoBehaviour
         speed = 0f;
         gameOverUI.SetActive(true);
         gameIsOver = true;
+    }
+
+    //Hides mode UI and starts game -Astraea
+    public void StartGame()
+    {
+        modeUI.SetActive(false);
+        speed = 3.0f;
+    }
+
+    //Starts game in time attack mode -Astraea
+    public void TimeAttackMode()
+    {
+        timerUI.SetText(":30");
+        timeMode = true;
+
+        StartGame();
     }
 }
 
