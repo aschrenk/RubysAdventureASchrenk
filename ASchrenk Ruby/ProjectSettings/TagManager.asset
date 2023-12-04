@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - RubyController
+  - SpeedPowerUp
   layers:
   - Default
   - TransparentFX

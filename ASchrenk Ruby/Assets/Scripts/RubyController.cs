@@ -57,10 +57,7 @@ public class RubyController : MonoBehaviour
     public GameObject modeUI;
     public TextMeshProUGUI timerUI;
 
-    //Ken- please put your new variables here
 
-
-    // Start is called before the first frame update
     void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
@@ -256,6 +253,22 @@ public class RubyController : MonoBehaviour
         timeMode = true;
 
         StartGame();
+    }
+
+    //Applies speed power up -Ken
+    public void ApplySpeedBoost(float multiplier, float duration)
+    {
+        StartCoroutine(BoostSpeedForDuration(multiplier, duration));
+    }
+
+    //Alters speed power up relative to time passing -Ken
+    private IEnumerator BoostSpeedForDuration(float multiplier, float duration)
+    {
+        speed *= multiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        speed /= multiplier;
     }
 }
 
